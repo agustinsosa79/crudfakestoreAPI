@@ -1,47 +1,81 @@
 const url = "https://fakestoreapi.com/products";
+const $name = document.querySelector("#name");
+const $description = document.querySelector("#description");
+const $price = document.querySelector("#price");
+const $image = document.querySelector("#image");
+const $form = document.querySelector("#product-form");
+const $submit = document.querySelector("#add-product-btn");
+let productsData = [];
 
-// Función para obtener los productos
-const fetchProducts = async () => {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error("La respuesta de la red no fue correcta.");
-        }
+// Actualiza tbody
+function renderTable() {
+    const $tbody = document.querySelector("#products-table tbody");
+    $tbody.innerHTML = productsData.map(p => `
+        <tr>
+            <td>${p.id}</td>
+            <td>${p.title}</td>
+            <td><img src="${p.image}" alt="${p.title}" style="width:60px;height:60px"></td>
+            <td>$${p.price}</td>
+            <td><button class="editar" data-id="${p.id}">Editar</button></td>
+            <td><button class="eliminar" data-id="${p.id}">Eliminar</button></td>
+        </tr>
+    `).join('');
+}
 
-        // Obtenemos los datos en formato JSON
-        const data = await response.json();
-        
-        // Creamos una tabla para mostrar los productos
-        let tableHTML = "<tr><th>ID</th><th>Titulo</th><th>Precio</th><th>Imagen</th></tr>";
-        
-        data.forEach(product => {
-            // Creamos una imagen usando la URL de la imagen del producto
-            const productImage = `<img src="${product.image}" alt="${product.title}" style="width: 100px; height: 100px;">`;
+// Obtiene productos
+async function fetchProducts() {
+    const res = await fetch(url);
+    productsData = await res.json();
+    renderTable();
+}
 
-            // Agregamos la fila de la tabla con la imagen
-            tableHTML += `
-                <tr>
-                    <td>${product.id}</td>
-                    <td>${product.title}</td>
-                    <td>${productImage}</td>
-                    <td>$${product.price}</td>
-                </tr>
-            `;
-        });
-        
-        // Insertamos el HTML generado en la tabla
-        document.querySelector("#products-table").innerHTML = tableHTML;
-        
-        // Mostramos los productos en la consola
-        console.log("Productos recibidos:", data);
-        
-        // Retornamos los datos
-        return data;
-    } catch (error) {
-        // En caso de error, lo mostramos en la consola
-        console.error("Error al obtener los productos:", error);
-    }
-};
-
-// Llamamos a la función
+// Iniciar
 fetchProducts();
+
+// Manejar clics
+document.addEventListener('click', async e => {
+    // Editar
+    if (e.target.classList.contains('editar')) {
+        const id = e.target.dataset.id;
+        const prod = productsData.find(x => x.id == id);
+        $name.value = prod.title;
+        $description.value = prod.description;
+        $price.value = prod.price;
+        $image.value = prod.image;
+        $submit.dataset.id = id;
+        $submit.textContent = 'Actualizar Producto';
+    }
+    // Eliminar
+    if (e.target.classList.contains('eliminar')) {
+        const id = e.target.dataset.id;
+        await fetch(`${url}/${id}`, { method:'DELETE' });
+        productsData = productsData.filter(x=>x.id!=id);
+        renderTable();
+    }
+    // Agregar/Actualizar
+    if (e.target.id === 'add-product-btn') {
+        const id = e.target.dataset.id;
+        const method = id ? 'PUT':'POST';
+        const endpoint = id? `${url}/${id}`:url;
+        const body = {
+            title: $name.value,
+            description: $description.value,
+            price: parseFloat($price.value),
+            image: $image.value
+        };
+        const res = await fetch(endpoint, {
+            method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (id) {
+            const idx = productsData.findIndex(x=>x.id==id);
+            productsData[idx]=data;
+        } else {
+            productsData.push(data);
+        }
+        renderTable();
+        $form.reset();
+        delete $submit.dataset.id;
+        $submit.textContent='Agregar Producto';
+    }
+});

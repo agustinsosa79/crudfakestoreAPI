@@ -11,9 +11,7 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Productos</a></li>
-                <li><a href="#">Salir</a></li>
+                <li><a href="./index.html">Inicio</a></li>
             </ul>
         </nav>
     </header>
@@ -28,28 +26,30 @@
                 <input type="text" id="description" placeholder="Descripción" required>
                 <input type="number" id="price" placeholder="Precio" required>
                 <input type="text" id="image" placeholder="Imagen URL" required>
-                <button type="submit">Agregar Producto</button>
+                <button type="button" id="add-product-btn">Agregar Producto</button>
             </form>
         </section>
 
-        <!-- Tabla de productos (vacía al principio) -->
+        <!-- Tabla de productos -->
         <section id="product-list">
             <h2>Lista de Productos</h2>
             <table id="products-table">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Imagen</th>
+                        <th>Precio</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    <!-- Filas dinámicas aquí -->
                 </tbody>
             </table>
         </section>
+
     </main>
 
     <script src="./script.js"></script>
