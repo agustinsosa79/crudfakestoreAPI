@@ -8,8 +8,8 @@
 /* Estilo general */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212; /* Fondo oscuro */
-    color: #e0e0e0; /* Texto clarito */
+    background-color: #121212;
+    color: #e0e0e0;
     padding: 40px 20px;
 }
 
@@ -26,6 +26,7 @@ nav ul {
     display: flex;
     justify-content: center;
     gap: 30px;
+    flex-wrap: wrap; /* Permite que salten a nueva línea si no entran */
 }
 
 nav a {
@@ -41,7 +42,7 @@ nav a::after {
     position: absolute;
     width: 0%;
     height: 2px;
-    background: #bb86fc; /* Morado suave */
+    background: #bb86fc;
     bottom: -5px;
     left: 0;
     transition: width 0.3s;
@@ -141,6 +142,7 @@ td img {
     margin-right: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    display: inline-block;
 }
 
 .editar:hover {
@@ -155,7 +157,13 @@ td img {
     background-color: #b00020;
 }
 
-/* Responsive */
+/* FULL RESPONSIVE */
+@media (max-width: 992px) {
+    nav ul {
+        gap: 20px;
+    }
+}
+
 @media (max-width: 768px) {
     nav ul {
         flex-direction: column;
@@ -163,7 +171,65 @@ td img {
         gap: 15px;
     }
 
+    main {
+        padding: 0 10px;
+    }
+
     form, table {
         font-size: 14px;
+    }
+
+    button, .editar, .eliminar {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    td img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Tabla adaptada para móviles */
+@media (max-width: 576px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        background-color: #1f1f1f;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        font-size: 14px;
+        border: none;
+        border-bottom: 1px solid #333;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+        color: #bb86fc;
+    }
+
+    .editar, .eliminar {
+        font-size: 13px;
     }
 }

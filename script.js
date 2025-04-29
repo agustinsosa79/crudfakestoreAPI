@@ -12,12 +12,12 @@ function renderTable() {
     const $tbody = document.querySelector("#products-table tbody");
     $tbody.innerHTML = productsData.map(p => `
         <tr>
-            <td>${p.id}</td>
-            <td>${p.title}</td>
-            <td><img src="${p.image}" alt="${p.title}" style="width:60px;height:60px"></td>
-            <td>$${p.price}</td>
-            <td><button class="editar" data-id="${p.id}">Editar</button></td>
-            <td><button class="eliminar" data-id="${p.id}">Eliminar</button></td>
+            <td data-label="Producto">${p.id}</td>
+            <td data-label="Titulo">${p.title}</td>
+            <td data-label="Imagenes"><img src="${p.image}" alt="${p.title}" style="width:60px;height:60px"></td>
+            <td data-label="Precio">$${p.price}</td>
+            <td data-label="Acciones"><button class="editar" data-id="${p.id}">Editar</button></td>
+            <td data-label="Acciones"><button class="eliminar" data-id="${p.id}">Eliminar</button></td>
         </tr>
     `).join('');
 }
